@@ -306,6 +306,48 @@ Now, if we go check Salesforce we'll see that the page has been updated.
 
 Awesome, now that that's fixed, we can go ahead and commit our changes. (I'll spare you the snippets).
 
+Unfortunately, the title we changed was the wrong title and now we need to change it back. Instead of doing it locally, lets change it in Salesforce and pull that change down. I'm going to remove the "- Demo" from our page title and pull it down.
+
+```bash
+$ skuid pull
+Pages written to skuidpages
+```
+
+Now, if we ask git what changed about our page we should see something like this:
+
+```bash
+$ git diff skuidpages/SkuidCLITest.xml
+
+diff --git a/skuidpages/SkuidCLITest.xml b/skuidpages/SkuidCLITest.xml
+index 3ae698d..9f50007 100644
+--- a/skuidpages/SkuidCLITest.xml
++++ b/skuidpages/SkuidCLITest.xml
+@@ -1,9 +1,8 @@
+-<?xml version="1.0"?>
+ <skuidpage unsavedchangeswarning="yes" personalizationmode="server" showsidebar="true" useviewportmeta="true" showheader="true">
+   <models/>
+   <components>
+     <pagetitle uniqueid="sk-2pXMp6-86">
+-      <maintitle>Skuid CLI Test - Demo</maintitle>
++      <maintitle>Skuid CLI Test</maintitle>
+       <actions/>
+     </pagetitle>
+     <template multiple="false" uniqueid="sk-2pXQkq-95" allowhtml="false">
+```
+
+Fortunately, you don't really need to know everything that output is telling you. The important parts are the lines that start with a "-" and a "+". What `git` is telling us here is that we changed the `maintitle` from "Skuid CLI Test - Demo" to "Skuid CLI Test" by removing the whole line and replacing it with our new title.
+
+Once we commit that file, we have now told `git` that that's what we really want.
 
 
 
+## Conclusion
+
+This tutorial isn't meant to tell you all the ins and outs of doing source control with Salesforce and Skuid. The goal is to give you an idea of the concepts involved and help ease the transition.
+
+## Resources
+- <https://github.com/heroku/force>
+- <https://github.com/skuid/skuid>
+- <https://git-scm.org>
+- <https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_types_list.htm>
+- <https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/manifest_samples.htm>
