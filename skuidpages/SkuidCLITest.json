@@ -1,9 +1,0 @@
-{
-    "name": "SkuidCLITest",
-    "uniqueId": "_SkuidCLITest",
-    "type": "Desktop",
-    "module": "",
-    "maxAutoSaves": 25,
-    "isMasterPage": false,
-    "composerSettings": null
-}
