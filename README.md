@@ -208,3 +208,11 @@ There are a lot of features of `git` that aren't covered by this tutorial, but y
 
 
 
+## Using the Skuid CLI
+
+The `skuid` CLI is a simplified version of `force` made specificly for interacting with the Skuid managed package. The great thing about `skuid` is the concepts mentioned above still apply. The CLI is responsible for "pushing" and "pulling" your Skuid pages to & from your filesystem. We can now use the `skuid` command and represent our Skuid pages in version control. Let's see how it works.
+
+As you can see below, I have a Skuid page in my Org called SkuidCLIDemo.
+
+![PageList](images/page_list.png)
+
