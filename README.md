@@ -216,3 +216,96 @@ As you can see below, I have a Skuid page in my Org called SkuidCLIDemo.
 
 ![PageList](images/page_list.png)
 
+The first thing we want to do is pull that Skuid page out of our Org. We'll do that with the `skuid pull` command.
+
+```bash
+$ skuid pull
+Pages written to skuidpages
+```
+
+As you can see, our Skuid pages have been pulled out of our Org (don't worry, they're still there) and written to files in a folder called `skuidpages`. If you looked at the contents of that folder, you would see 2 files have been written.
+
+```bash
+$ tree skuidpages
+skuidpages
+├── SkuidCLITest.json
+└── SkuidCLITest.xml
+
+0 directories, 2 files
+```
+
+The structure of these files has been documented in the [`skuid-grunt`](https//github.com/skuid/skuid-grunt) documentation, but I'll mention it here as well. The first file you see is a JSON file. It contains metadata about the Skuid page. Information such as Module, UniqueID, and Master Pages can be found here.
+
+```json
+{
+    "name": "SkuidCLITest",
+    "uniqueId": "_SkuidCLITest",
+    "type": "Desktop",
+    "module": "",
+    "maxAutoSaves": 25,
+    "isMasterPage": false,
+    "composerSettings": null
+}
+```
+
+This metadata file is paired with an XML file which is the Skuid page. You've probably seen this before in the XML editor. Both of these files comprise a Skuid page.
+
+Now that we have our Skuid pages pulled down, we can go ahead and commit them.
+
+```bash
+# Stage our files
+$ git add skuidpages
+
+# Make sure they're staged
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	new file:   skuidpages/SkuidCLITest.json
+	new file:   skuidpages/SkuidCLITest.xml
+	
+# commit the files	
+$ git commit -m "Adding our Skuidpages"
+[master 401ca3d] Adding our Skuidpages
+ 2 files changed, 10 insertions(+)
+ create mode 100644 skuidpages/SkuidCLITest.json
+ create mode 100644 skuidpages/SkuidCLITest.xml
+```
+
+The next thing we'll look at is how to update Skuid pages in your Org with what you have stored on your filesystem. In our case, we would do this if someone made changes to a Skuid page and we needed those changes reflected in our Org. I'll simulate that by making a change to our XML file and pushing it to my org.
+
+As you can see, my Skuid page has a Page Title with the Title "Skuid CLI Test". 
+
+![TitleShot](images/title_shot.png)
+
+But wait, that's not the correct name. It should really say "Skuid CLI Test - Demo". Since we have the Skuid page locally, we can make that change without having to go into Salesforce. I'll edit my file like so:
+
+```xml
+<components>
+    <pagetitle uniqueid="sk-2pXMp6-86">
+      <maintitle>Skuid CLI Test - Demo</maintitle>
+      <actions/>
+    </pagetitle>
+```
+
+Once I've done that and saved my file, the next thing I'll do is push it to my Org.
+
+```bash
+$ skuid push -f skuidpages/SkuidCLITest.json
+Pushing 1 pages.
+Pages successfully pushed to org: Skuid.
+```
+
+Now, if we go check Salesforce we'll see that the page has been updated.
+
+![ChangeShot](images/change_shot.png)
+
+
+Awesome, now that that's fixed, we can go ahead and commit our changes. (I'll spare you the snippets).
+
+
+
+
