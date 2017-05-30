@@ -8,9 +8,27 @@ You can find more information about these tools here:
 * https://github.com/skuid/skuid
 * https://git-scm.org
 
+
+## Following this tutorial
+
+This tutorial is meant to be interactive. To follow along, you'll need to clone or fork this repo. Do so with the following command:
+
+```bash
+$ git clone https://github.com/skuid/sfdc-vcs-tutorial
+```
+
+One of the goals of this tutorial is to get comfortable with using Git for version control. It is very command line heavy. There are GUI tools for interacting with Git repositories, but they tend to obscure what's really happening. It's suggested that you become comfortable with using Git from the command line before moving onto one of these tools. By doing so, you will have a better understanding of Git overall.
+
+If you aren't familiar with Git, you can go through Github's Git tutorial: <https://try.github.io/levels/1/challenges/1>. It should only take 15 minutes!
+
+Also, if you aren't familiar with following command line examples, just remember that any line that starts with a `$` is a command that you should type into your terminal!
+
 ## Getting Started
 
-To get started, you'll need to install the tools listed above. You can install `git` via Homebrew or download it from their website. 
+To get started, you'll need to install the tools listed above. You can install `git` via Homebrew or download it from their website.
+
+
+
 
 To install `force` and `skuid`, run the setup script as follows:
 
@@ -31,18 +49,20 @@ Both of those commands should output information about the commands you can run 
 $ force login
 ```
 
-This will open a browser window where you can log into Salesforce. Once it's done you should see the following output:
+This will open a browser window where you can log into Salesforce. You'll want to log into the Salesforce org you wish to start version controlling. Once it's done you should see the following output:
 
 ```bash
 $ force login
 Logged in as 'ethanfrogers@sfdc-vcs.com' (API v37.0)
 ```
 
+*You'll also see the use of a command called `tree` throughout this tutorial. It's used to display a directory listing from the command line. If you wish to install it, you can install it with `brew install tree`.*
+
 ## Working with the Force CLI
 
-The Force CLI the tool that we'll use for interacting with Salesforce metadata. It allows us to "fetch" metadata out of Salesforce and store a representation of that on our filesystem. Once the data is on our filesystem, we can version control it (more on that later).
+The Force CLI is the tool that we'll use for interacting with Salesforce metadata. It allows us to "fetch" metadata from Salesforce and store a representation of that on our filesystem. This is called the "at rest" state of your metadata. Once the data is on our filesystem, we can version control it (more on that later).
 
-One of the main files we care about when working with Salesforce metadata is `src/package.xml`. The `package.xml` file is important because it lists all of the metadata that we care about in the context of our project. If you look at the one in this tutorial, you'll notice that we are listing the `Case` and `Opportunity` objects. 
+One of the main files we care about when working with Salesforce metadata is `src/package.xml`. The `package.xml` file is important because it lists all of the metadata that we care about in the context of our project. If you look at the one in this tutorial, you'll notice that we are listing the `Case` and `Opportunity` Standard Objects. 
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -63,7 +83,7 @@ If you look in the `src` folder, you'll see that the only file in it is the `pac
 ```
 $ force fetch -x src/package.xml
 Not done yet: InProgress  Will check again in five seconds.
-Exported to demo-team-repo/src
+Exported to sfdc-vcs-tutorial/src
 ```
 
 Here we're using the `force` command to fetch our metadata, and telling it where to find the `package.xml` file. You'll notice that it said it exported something to our `src` folder. Let's look in that folder and see what it did.
@@ -79,7 +99,7 @@ src
 1 directory, 3 files
 ```
 
-Now, there is a folder in our `src` folder that is storing the representation of our `Case` and `Opportunity` objects. If you look at the `src/objects/Case.object` file, you'll see that it's just an XML file defining all of the properties of our `Case` object, including Standard and Custom Fields. Here are the first 10 lines.
+Now, there is a folder in our `src` folder that is storing a representation of our `Case` and `Opportunity` objects. If you take a look at the `src/objects/Case.object` file, you'll see that it's just an XML file defining all of the properties of our `Case` object, including Standard and Custom Fields. Here are the first 10 lines.
 
 
 ```xml
@@ -97,7 +117,9 @@ Now, there is a folder in our `src` folder that is storing the representation of
 
 Now, let's include other metadata to see how it affects what we fetch.
 
-In your org, create a Static Resource named `VersionControlDemo` and upload any file you want. Only the name really matters. Then, edit `src/package.xml` so that it looks like this:
+In your org, create a Static Resource named `VersionControlDemo` and upload any file you want. Only the name really matters. 
+
+Then, edit `src/package.xml` so that it looks like this:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -136,9 +158,16 @@ src
 
 This can be extrapolated to all metadata types within Salesforce. See [this documentation](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_types_list.htm) for a full list. For more information about how `package.xml` affects what's "pushed" and "fetched", see [this documentation](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/manifest_samples.htm).
 
+For our next step, we'll want to commit the files that we so that we can start learning about using Git. Do with with the following commands:
+
+```
+$ git add .
+$ git commit -m "demo commit"
+```
+
 ## How does this relate to version control?
 
-Version control is all about the state of a file on your computer at a given point in time. With `git`, we "commit" files which tells `git` "at this point in time, this is what the file should look like". From there, `git` can track any changes to the file, until the next "commit". Once we commit those changes, it's like telling `git` "now at this point in time, the file should look like this". Lets look at an example.
+Version control is all about the state of a file on your computer at a given point in time. With `git`, we "commit" files which tells `git` "at this point in time, this is what the file should look like". From there, `git` can track any changes to the file, until the next "commit". Once we commit those changes, we are telling `git` "now the file should look like this". Lets look at an example.
 
 We'll start with our Static Resource that we added in the previous steps. This is what mine looks like: 
 
@@ -161,7 +190,7 @@ Now, edit the `src/staticresources/VersionControlDemo.resource` file. Add anythi
 This is a tutorial! And I love using Git!
 ```
 
-If we ask `git` about changes again, we'll see that it saw changes to our file.
+If we ask `git` about changes again, we'll see that it noticed changes in our file. Note the word `modified` next to the file that we changed.
 
 ```bash
 $ git status
@@ -188,7 +217,7 @@ Changes to be committed:
 	modified:   src/staticresources/VersionControlDemo.resource
 ```
 
-The next step is to commit our changes. When we commit, we must include a short message about what we are comitting. This is usually some useful information so that others can look back and see why something was done. It can be helpful for those that come behind you to see your motivation for a change. We'll do this with the following command.
+The next step is to commit our changes. When we commit, we must include a short message about what we are comitting. This is usually some useful information so that others who look back can see why something was done. It can be helpful for those that come behind you to see your motivation for a change. We'll do this with the following command.
 
 ```bash
 $ git commit -m "Editing the VersionControlDemo file for the commit step"
@@ -210,9 +239,9 @@ There are a lot of features of `git` that aren't covered by this tutorial, but y
 
 ## Using the Skuid CLI
 
-The `skuid` CLI is a simplified version of `force` made specificly for interacting with the Skuid managed package. The great thing about `skuid` is the concepts mentioned above still apply. The CLI is responsible for "pushing" and "pulling" your Skuid pages to & from your filesystem. We can now use the `skuid` command and represent our Skuid pages in version control. Let's see how it works.
+The `skuid` CLI is a tool made specificly for interacting with the Skuid managed package. It is similar to `force`, but interacts with Skuid records instead of Salesforce metadata. The great thing about `skuid` is that the concepts mentioned above still apply. The CLI is responsible for "pulling" and "pushing" your Skuid pages to & from your filesystem. We can now use the `skuid` command and represent our Skuid pages in version control. Let's see how it works.
 
-As you can see below, I have a Skuid page in my Org called SkuidCLIDemo.
+As you can see below, I have a Skuid page in my Org called SkuidCLITest.
 
 ![PageList](images/page_list.png)
 
@@ -248,7 +277,7 @@ The structure of these files has been documented in the [`skuid-grunt`](https//g
 }
 ```
 
-This metadata file is paired with an XML file which is the Skuid page. You've probably seen this before in the XML editor. Both of these files comprise a Skuid page.
+This metadata file is paired with an XML file which is the Skuid page content. You've probably seen this before in the XML editor. Both of these files comprise a Skuid page in it's "at rest" format.
 
 Now that we have our Skuid pages pulled down, we can go ahead and commit them.
 
@@ -256,7 +285,7 @@ Now that we have our Skuid pages pulled down, we can go ahead and commit them.
 # Stage our files
 $ git add skuidpages
 
-# Make sure they're staged
+# Make sure they're staged - note the new file lines
 $ git status
 On branch master
 Your branch is ahead of 'origin/master' by 1 commit.
@@ -281,7 +310,7 @@ As you can see, my Skuid page has a Page Title with the Title "Skuid CLI Test".
 
 ![TitleShot](images/title_shot.png)
 
-But wait, that's not the correct name. It should really say "Skuid CLI Test - Demo". Since we have the Skuid page locally, we can make that change without having to go into Salesforce. I'll edit my file like so:
+But wait, that's not the correct name. Perhaps our requirements state that it should really say "Skuid CLI Test - Demo". Since we have the Skuid page locally, we can make that change without having to go into Salesforce. I'll edit my file like so:
 
 ```xml
 <components>
@@ -291,7 +320,9 @@ But wait, that's not the correct name. It should really say "Skuid CLI Test - De
     </pagetitle>
 ```
 
-Once I've done that and saved my file, the next thing I'll do is push it to my Org.
+*Note: For larger changes that involve moving components around, you should still make your changes from Skuid. Handwriting XML is not encouraged.*
+
+Once I've done that and saved my file, the next thing I'll do is push it to my Org. The `skuid push` command reads our XML and JSON and sends it to the org we have configured. The `-f` flag is specifying the Skuid Page that we're targeting.
 
 ```bash
 $ skuid push -f skuidpages/SkuidCLITest.json
@@ -344,6 +375,8 @@ Once we commit that file, we have now told `git` that that's what we really want
 ## Conclusion
 
 This tutorial isn't meant to tell you all the ins and outs of doing source control with Salesforce and Skuid. The goal is to give you an idea of the concepts involved and help ease the transition.
+
+It's impotant to remember that Git, Force and Skuid are all just tools in accomplishing an overall goal of using Version Control with Salesforce. Since Salesforce is a platform, we have to interact with it via the interfaces they expose. Force and Skuid are just convenient ways of calling APIs within both Salesforce and Skuid that are available for migrating and deploying metadata.
 
 ## Resources
 - <https://github.com/heroku/force>
